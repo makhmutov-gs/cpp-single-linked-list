@@ -132,8 +132,8 @@ public:
         SingleLinkedList tmp1;
         SingleLinkedList tmp2;
 
-		tmp1.ReverseFillFromContainer(other);
-		tmp2.ReverseFillFromContainer(tmp1);
+        tmp1.ReverseFillFromContainer(other);
+        tmp2.ReverseFillFromContainer(tmp1);
 
         swap(tmp2);
     }
@@ -152,14 +152,8 @@ public:
 
     // Обменивает содержимое списков за время O(1)
     void swap(SingleLinkedList& other) noexcept {
-        auto tmp_size = other.size_;
-        auto tmp_next_node = other.head_.next_node;
-
-        other.size_ = size_;
-        other.head_.next_node = head_.next_node;
-
-        size_ = tmp_size;
-        head_.next_node = tmp_next_node;
+        std::swap(size_, other.size_);
+        std::swap(head_.next_node, other.head_.next_node);
     }
 
     ~SingleLinkedList() {
@@ -259,6 +253,7 @@ public:
      * Если при создании элемента будет выброшено исключение, список останется в прежнем состоянии
      */
     Iterator InsertAfter(ConstIterator pos, const Type& value) {
+        assert(pos.node_);
 		pos.node_->next_node = new Node(value, pos.node_->next_node);
         ++size_;
         return Iterator(pos.node_->next_node);
@@ -273,6 +268,7 @@ public:
      * Возвращает итератор на элемент, следующий за удалённым
      */
     Iterator EraseAfter(ConstIterator pos) noexcept {
+        assert(!IsEmpty() && pos.node_->next_node);
         return Iterator(DeleteNode(pos.node_->next_node));
     }
 
@@ -283,6 +279,7 @@ private:
 
 	// Метод для удаления узла по адресу node_ptr
 	Node* DeleteNode(Node*& node_ptr) {
+        assert(size_ != 0);
 		auto tmp = node_ptr->next_node;
 
 		delete(node_ptr);
@@ -310,7 +307,7 @@ void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
 
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    return lhs.GetSize() == rhs.GetSize() && std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 template <typename Type>
