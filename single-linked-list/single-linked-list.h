@@ -254,7 +254,7 @@ public:
      */
     Iterator InsertAfter(ConstIterator pos, const Type& value) {
         assert(pos.node_);
-		pos.node_->next_node = new Node(value, pos.node_->next_node);
+        pos.node_->next_node = new Node(value, pos.node_->next_node);
         ++size_;
         return Iterator(pos.node_->next_node);
     }
@@ -277,26 +277,26 @@ private:
     Node head_ = Node();
     size_t size_ = 0;
 
-	// Метод для удаления узла по адресу node_ptr
-	Node* DeleteNode(Node*& node_ptr) {
+    // Метод для удаления узла по адресу node_ptr
+    Node* DeleteNode(Node*& node_ptr) {
         assert(size_ != 0);
-		auto tmp = node_ptr->next_node;
+        auto tmp = node_ptr->next_node;
 
-		delete(node_ptr);
+        delete(node_ptr);
 
-		node_ptr = tmp;
-		--size_;
+        node_ptr = tmp;
+        --size_;
 
-		return node_ptr;
-	}
+        return node_ptr;
+    }
 
-	// Заполнить список элементами из контейнера в обратном порядке
-	template <typename Container>
-	void ReverseFillFromContainer(Container& container) {
-		for (const auto& element : container) {
-			PushFront(element);
-		}
-	}
+    // Заполнить список элементами из контейнера в обратном порядке
+    template <typename Container>
+    void ReverseFillFromContainer(Container& container) {
+        for (const auto& element : container) {
+            PushFront(element);
+        }
+    }
 };
 
 
@@ -307,7 +307,8 @@ void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
 
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return lhs.GetSize() == rhs.GetSize() && std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    return (&lhs == &rhs)
+        || (lhs.GetSize() == rhs.GetSize() && std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 }
 
 template <typename Type>
